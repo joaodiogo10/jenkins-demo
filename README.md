@@ -6,7 +6,7 @@ The controller pulls for changes on the repos https://github.com/joaodiogo10/sim
 ![schematic](jenkins-docker-cloud.png)
 
 
-The Jenkins controller runs on the local host on [localhost:8000](http\\localhost:8080)
+The Jenkins controller runs on the local host on [localhost:8000](http:\\localhost:8080)
 
 
 
