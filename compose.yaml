@@ -1,0 +1,65 @@
+services: 
+  docker-cloud:
+    image: docker:27.0.3-dind
+    restart: unless-stopped
+    privileged: true
+    networks:
+      jenkins:
+        aliases: 
+          - docker
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - jenkins-data:/var/jenkins_home
+
+    command: --storage-driver overlay2
+      
+    healthcheck:
+      test: ["CMD-SHELL", "docker ps"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  sidekick-service:
+    depends_on: 
+      docker-cloud:
+        condition: service_healthy
+    
+    build: 
+      context: ./sidekick/.
+      args:
+        CERT_PATH: "/certs/client"
+        JENKINS_CONFIG_DIR: "/var/jenkins_home/casc_configs"
+        JENKINS_HOME: "/var/jenkins_home"
+
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - jenkins-data:/var/jenkins_home
+
+  jenkins:
+    depends_on: 
+      - sidekick-service
+    build: .
+    restart: on-failure
+    networks:
+      - jenkins
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/jenkins.yaml
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+
+networks:
+  jenkins:
+
+volumes:
+  jenkins-data:
+  jenkins-docker-certs:

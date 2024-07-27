@@ -1,0 +1,83 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<hudson>
+  <disabledAdministrativeMonitors/>
+  <version>2.452.3</version>
+  <numExecutors>0</numExecutors>
+  <mode>NORMAL</mode>
+  <useSecurity>true</useSecurity>
+  <authorizationStrategy class="hudson.security.FullControlOnceLoggedInAuthorizationStrategy">
+    <denyAnonymousReadAccess>true</denyAnonymousReadAccess>
+  </authorizationStrategy>
+  <securityRealm class="hudson.security.HudsonPrivateSecurityRealm">
+    <disableSignup>true</disableSignup>
+    <enableCaptcha>false</enableCaptcha>
+  </securityRealm>
+  <disableRememberMe>false</disableRememberMe>
+  <projectNamingStrategy class="jenkins.model.ProjectNamingStrategy$DefaultProjectNamingStrategy"/>
+  <workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>
+  <markupFormatter class="hudson.markup.EscapedMarkupFormatter"/>
+  <jdks/>
+  <viewsTabBar class="hudson.views.DefaultViewsTabBar"/>
+  <myViewsTabBar class="hudson.views.DefaultMyViewsTabBar"/>
+  <clouds>
+    <com.nirima.jenkins.plugins.docker.DockerCloud plugin="docker-plugin@1.6.2">
+      <name>cloud-test</name>
+      <templates>
+        <com.nirima.jenkins.plugins.docker.DockerTemplate>
+          <configVersion>2</configVersion>
+          <labelString>agent1</labelString>
+          <connector class="io.jenkins.docker.connector.DockerComputerAttachConnector"/>
+          <instanceCap>2147483647</instanceCap>
+          <mode>NORMAL</mode>
+          <retentionStrategy class="com.nirima.jenkins.plugins.docker.strategy.DockerOnceRetentionStrategy">
+            <idleMinutes>10</idleMinutes>
+          </retentionStrategy>
+          <dockerTemplateBase>
+            <image>joaodiogohf1/jenkins-agent-docker:1.0</image>
+            <bindAllPorts>false</bindAllPorts>
+            <cpuPeriod>0</cpuPeriod>
+            <cpuQuota>0</cpuQuota>
+            <privileged>false</privileged>
+            <tty>false</tty>
+          </dockerTemplateBase>
+          <removeVolumes>false</removeVolumes>
+          <stopTimeout>10</stopTimeout>
+          <pullStrategy>PULL_ALWAYS</pullStrategy>
+          <pullTimeout>300</pullTimeout>
+          <name>agent1</name>
+        </com.nirima.jenkins.plugins.docker.DockerTemplate>
+      </templates>
+      <dockerApi>
+        <dockerHost plugin="docker-commons@439.va_3cb_0a_6a_fb_29">
+          <uri>tcp://docker:2376</uri>
+          <credentialsId>b3bc8af6-6a31-433c-a9ca-06cdc8399a2a</credentialsId>
+        </dockerHost>
+        <connectTimeout>60</connectTimeout>
+        <readTimeout>60</readTimeout>
+      </dockerApi>
+      <containerCap>100</containerCap>
+      <exposeDockerHost>false</exposeDockerHost>
+    </com.nirima.jenkins.plugins.docker.DockerCloud>
+  </clouds>
+  <quietPeriod>5</quietPeriod>
+  <scmCheckoutRetryCount>0</scmCheckoutRetryCount>
+  <views>
+    <hudson.model.AllView>
+      <owner class="hudson" reference="../../.."/>
+      <name>all</name>
+      <filterExecutors>false</filterExecutors>
+      <filterQueue>false</filterQueue>
+      <properties class="hudson.model.View$PropertyList"/>
+    </hudson.model.AllView>
+  </views>
+  <primaryView>all</primaryView>
+  <slaveAgentPort>50000</slaveAgentPort>
+  <label></label>
+  <crumbIssuer class="hudson.security.csrf.DefaultCrumbIssuer">
+    <excludeClientIPFromCrumb>false</excludeClientIPFromCrumb>
+  </crumbIssuer>
+  <nodeProperties/>
+  <globalNodeProperties/>
+  <nodeRenameMigrationNeeded>false</nodeRenameMigrationNeeded>
+</hudson>
